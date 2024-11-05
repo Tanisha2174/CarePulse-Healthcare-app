@@ -24,6 +24,4 @@ This application leverages a modern tech stack to ensure robust performance and 
 - **ShadCN:** Facilitates an organized and reusable component structure, improving development efficiency.
 - **Twilio:** Utilized for sending SMS notifications to patients, ensuring they stay informed about their appointment status.
 
-## Getting Started
 
-To get started with CarePulse, clone the repository and follow the installation instructions in the setup guide.
