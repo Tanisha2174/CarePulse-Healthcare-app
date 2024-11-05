@@ -35,14 +35,17 @@ export const PasskeyModal = () => {
   useEffect(() => {
     const accessKey = encryptedKey && decryptKey(encryptedKey);
 
-    if (path)
-      if (accessKey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY!.toString()) {
+    if (path && process.env.NEXT_PUBLIC_ADMIN_PASSKEY) {
+      if (accessKey === process.env.NEXT_PUBLIC_ADMIN_PASSKEY) {
         setOpen(false);
         router.push("/admin");
       } else {
         setOpen(true);
       }
-  }, [encryptedKey]);
+    } else {
+      console.error("Environment variable NEXT_PUBLIC_ADMIN_PASSKEY is not defined");
+    }
+  }, [encryptedKey, path, router]);
 
   const closeModal = () => {
     setOpen(false);
@@ -60,6 +63,7 @@ export const PasskeyModal = () => {
       localStorage.setItem("accessKey", encryptedKey);
 
       setOpen(false);
+      router.push("/admin");
     } else {
       setError("Invalid passkey. Please try again.");
     }
@@ -76,7 +80,7 @@ export const PasskeyModal = () => {
               alt="close"
               width={20}
               height={20}
-              onClick={() => closeModal()}
+              onClick={closeModal}
               className="cursor-pointer"
             />
           </AlertDialogTitle>
@@ -91,12 +95,9 @@ export const PasskeyModal = () => {
             onChange={(value) => setPasskey(value)}
           >
             <InputOTPGroup className="shad-otp">
-              <InputOTPSlot className="shad-otp-slot" index={0} />
-              <InputOTPSlot className="shad-otp-slot" index={1} />
-              <InputOTPSlot className="shad-otp-slot" index={2} />
-              <InputOTPSlot className="shad-otp-slot" index={3} />
-              <InputOTPSlot className="shad-otp-slot" index={4} />
-              <InputOTPSlot className="shad-otp-slot" index={5} />
+              {[...Array(6)].map((_, index) => (
+                <InputOTPSlot key={index} className="shad-otp-slot" index={index} />
+              ))}
             </InputOTPGroup>
           </InputOTP>
 
@@ -108,7 +109,7 @@ export const PasskeyModal = () => {
         </div>
         <AlertDialogFooter>
           <AlertDialogAction
-            onClick={(e) => validatePasskey(e)}
+            onClick={validatePasskey}
             className="shad-primary-btn w-full"
           >
             Enter Admin Passkey
